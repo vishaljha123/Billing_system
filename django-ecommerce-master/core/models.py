@@ -4,7 +4,8 @@ from django.db import models
 from django.db.models import Sum
 from django.shortcuts import reverse
 from django_countries.fields import CountryField
-
+from phonenumber_field.modelfields import PhoneNumberField
+from datetime import datetime
 
 CATEGORY_CHOICES = (
     ('S', 'Shirt'),
@@ -24,15 +25,7 @@ ADDRESS_CHOICES = (
 )
 
 
-class UserProfile(models.Model):
-    user = models.OneToOneField(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     
-   
-    def __str__(self):
-        return self.user.username
-
-
 class Item(models.Model):
     title = models.CharField(max_length=100)
     price = models.FloatField()
@@ -41,7 +34,7 @@ class Item(models.Model):
     label = models.CharField(choices=LABEL_CHOICES, max_length=1)
     slug = models.SlugField()
     description = models.TextField()
-    image = models.ImageField()
+    image = models.ImageField('media_root/images/')
 
     def __str__(self):
         return self.title
@@ -82,8 +75,8 @@ class Order(models.Model):
                              on_delete=models.CASCADE)
     
     items = models.ManyToManyField(OrderItem)
-    start_date = models.DateTimeField(auto_now_add=True)
-    ordered_date = models.DateTimeField()
+    start_date = models.DateTimeField(default=datetime.now)
+    ordered_date = models.DateTimeField(default=datetime.now)
     ordered = models.BooleanField(default=False)
     shipping_address = models.ForeignKey(
         'Address', related_name='shipping_address', on_delete=models.SET_NULL, blank=True, null=True)
@@ -99,8 +92,7 @@ class Order(models.Model):
             total += order_item.get_total_item_price()
        
         return total
-
-
+    
 
         
 class Address(models.Model):
@@ -120,3 +112,16 @@ class Address(models.Model):
         verbose_name_plural = 'Addresses'
 
 
+
+
+
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    
+    location = models.TextField(max_length=255)
+    phone = PhoneNumberField()
+    def __str__(self):
+
+       return '{}{}{}'.format(self.user, self.location, self.phone)

@@ -1,0 +1,41 @@
+
+<style>
+   
+    table, th, td {
+  border: 1px solid black;
+  text-align: center;
+  border-width: 2px;
+  
+
+  
+}
+   </style> 
+   <body>
+  
+{% include "base.html" %}
+
+ 
+    <table style="=width:100%">
+        <tr>  
+            <th>user</th>
+            <th>user_total_bill_amunt</th>
+            <th>order_date</th>
+            
+        </tr>
+   
+    {% for x in object_list %}
+      
+      
+        <tr>
+        <td>{{x.user}}</td>
+        <td>{{x.get_total}}</td>
+        <td>{{x.ordered_date}}</td>
+        
+    </tr>
+    
+    </div>
+    {% endfor %}
+   
+</table>
+</div>
+</body>  

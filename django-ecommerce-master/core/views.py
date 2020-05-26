@@ -306,3 +306,9 @@ def remove_single_item_from_cart(request, slug):
     else:
         messages.info(request, "You do not have an active order")
         return redirect("core:product", slug=slug)
+
+
+class Finance_detail(ListView):
+    model = Order
+    paginate_by = 10
+    template_name = "finance.html"
